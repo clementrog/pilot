@@ -1,0 +1,25 @@
+# Cursor Rules
+
+Read `/pilot/RULES.md` before any task.
+
+## Quick Reference
+
+1. Read `/pilot/TASK.md` — understand the spec
+2. Implement ONLY `scope.must_have`
+3. Do NOT touch `scope.forbidden` or red zones
+4. After coding: update TASK.md (Implementation + Evidence)
+5. Evidence = real terminal output, not AI text
+6. Say "done" when TASK.md is complete
+
+## Red Zones (Need CRITICAL Approval)
+
+- `/api/auth/*`
+- `/api/payments/*`
+- `*.env*`
+- `/prisma/*`
+- `/lib/db*`
+
+## If Blocked
+
+Set `Implementation.status: blocked` and `Implementation.blockers: "reason"`
+Say "blocked: [reason]" instead of "done"
