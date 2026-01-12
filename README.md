@@ -2,6 +2,7 @@
 
 Trust infrastructure for AI coding. Ship real software without being an engineer.
 
+
 ## The Problem
 
 AI coding hits a ceiling. You can build an MVP in a weekend, but you can't trust it enough to scale.
@@ -33,6 +34,8 @@ A folder in your repo that acts as shared memory between you and AI tools.
 Any AI reads these files. Claude, Cursor, ChatGPT, Gemini. No vendor lock-in.
 
 ## How It Works
+
+
 
 ### Scope Contracts
 
@@ -108,6 +111,16 @@ Last Known Good (LKG) stored in STATE.md. If broken: `git checkout [lkg]`
 ## Philosophy
 
 You don't learn to code. You learn to verify.
+
+## Quick Start
+
+1. [Download the latest release](https://github.com/clementrog/pilot/releases/latest)
+2. Extract and copy `pilot/` to your repo
+3. Paste `pilot/CLAUDE.md` into your Claude project instructions
+4. Give PRD to Claude so it fills `STATE.md` with your project name, `CONTEXT.md` with your stack
+5. Say "status"
+6. Build
+
 
 ---
 
