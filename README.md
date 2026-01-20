@@ -1,6 +1,6 @@
 # Pilot v2
 
-Multi-agent orchestration for AI coding. Ship real software without being an engineer.
+Workflow for building quality software with AI.
 
 ## The Problem
 
@@ -9,6 +9,7 @@ AI coding tools are powerful but chaotic:
 - No verification that changes are correct
 - Scope creep and hallucinated "improvements"
 - No audit trail
+- Humans drifting away from where they shine: making the product an experience.
 
 **You need a system, not just a tool.**
 
@@ -22,8 +23,8 @@ You (human)
     ▼
 ┌─────────────┐    TASK.json    ┌─────────────┐
 │ Orchestrator │ ─────────────► │   Builder   │
-│ (plans)      │                │ (codes)     │
-└─────────────┘ ◄───────────── └─────────────┘
+│ (plans)      │    [+ chat]    │ (codes)     │
+└─────────────┘ ◄─────────────  └─────────────┘
     │              REPORT.json
     │
     │ REVIEW.json (HIGH risk only)
