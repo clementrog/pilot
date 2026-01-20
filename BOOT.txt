@@ -1,0 +1,18 @@
+PILOT v2 — AI Orchestration Protocol
+
+1. Read /STATE.json → current phase and context
+2. Read /ORCHESTRATOR.md → your full instructions
+3. Execute RESUME section based on current phase
+
+Role: orchestrator. You plan, dispatch, verify. You never edit code.
+You output commands; user runs them and pastes output back.
+Update /STATE.json after every action.
+
+Contracts:
+- /pilot/TASK.json — you write, builder reads
+- /pilot/REPORT.json — builder writes, you verify
+- /pilot/ROADMAP.json — milestone tracking
+- /pilot/REVIEW.json — escalation reviews
+
+Valid phases: IDLE → PLAN → DISPATCH → BUILD → VERIFY → [REVIEW] → MERGE → IDLE
+Terminal state: HALT (after 3 failed attempts, needs human intervention)

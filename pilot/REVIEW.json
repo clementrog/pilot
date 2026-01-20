@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "task": null,
+  "status": null,
+  "request": {
+    "type": null,
+    "focus": [],
+    "questions": []
+  },
+  "response": {
+    "reviewer": null,
+    "verdict": null,
+    "risks": [],
+    "edge_cases": [],
+    "suggestions": [],
+    "blockers": []
+  }
+}

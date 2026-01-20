@@ -1,0 +1,11 @@
+{
+  "v": 2,
+  "phase": "IDLE",
+  "task": null,
+  "milestone": null,
+  "branch": "main",
+  "attempt": 0,
+  "blockers": [],
+  "next": "Read /prd/ to begin planning",
+  "ts": null
+}

@@ -1,0 +1,21 @@
+{
+  "v": 3,
+  "id": null,
+  "milestone": null,
+  "goal": null,
+  "subtasks": [],
+  "context": {
+    "why": null,
+    "deps": [],
+    "extract": null
+  },
+  "scope": {
+    "write": [],
+    "create_under": [],
+    "read_forbidden": [".env*", "*.pem", "*.key", "*.secret"],
+    "forbidden": ["package.json", "*.lock", "*.config.*", "pilot/*"]
+  },
+  "acceptance": [],
+  "verify": [],
+  "risk": "LOW"
+}

@@ -1,0 +1,14 @@
+{
+  "v": 3,
+  "task": null,
+  "status": null,
+  "subtasks_completed": [],
+  "files": {
+    "changed": [],
+    "created": []
+  },
+  "verify": [],
+  "acceptance_notes": [],
+  "notes": [],
+  "blockers": []
+}
