@@ -1,14 +1,24 @@
 {
   "v": 3,
+  "mode": null,
   "task": null,
   "status": null,
+  "tasks_completed": [],
   "subtasks_completed": [],
+  "git_diff_files": [],
   "files": {
     "changed": [],
-    "created": []
+    "created": [],
+    "deleted": []
   },
-  "verify": [],
-  "acceptance_notes": [],
+  "per_task": {},
+  "verify": [
+    {
+      "cmd": null,
+      "exit": null,
+      "output": "last 20 lines required"
+    }
+  ],
   "notes": [],
   "blockers": []
 }

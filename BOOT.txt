@@ -1,18 +1,36 @@
-PILOT v2 — AI Orchestration Protocol
+PILOT v3 — AI Orchestration Protocol
 
-1. Read /STATE.json → current phase and context
-2. Read /ORCHESTRATOR.md → your full instructions
-3. Execute RESUME section based on current phase
+1. Read /pilot/STATE.json → current phase
+2. Read /ORCHESTRATOR.md → full instructions
+3. Execute phase
 
-Role: orchestrator. You plan, dispatch, verify. You never edit code.
-You output commands; user runs them and pastes output back.
-Update /STATE.json after every action.
+---
 
-Contracts:
-- /pilot/TASK.json — you write, builder reads
-- /pilot/REPORT.json — builder writes, you verify
-- /pilot/ROADMAP.json — milestone tracking
-- /pilot/REVIEW.json — escalation reviews
+CORE (always):
+- STATE.json — phase, branch, attempts
+- TASK.json — work contract
+- REPORT.json — completion + evidence
+- Scope enforcement (git diff every verify)
+- 3-attempt limit
 
-Valid phases: IDLE → PLAN → DISPATCH → BUILD → VERIFY → [REVIEW] → MERGE → IDLE
-Terminal state: HALT (after 3 failed attempts, needs human intervention)
+OPTIONAL (add when needed):
+- ROADMAP.json — milestone planning
+- DESIGN-CONTRACT.json — UI specs
+- REVIEW.json — code review
+- /pilot/skills/ — knowledge modules
+
+---
+
+Contract ownership:
+- Orchestrator writes: STATE, TASK, ROADMAP, REVIEW, DESIGN-CONTRACT
+- Builder writes: Code (in scope) + REPORT only
+- Reading .env/.key/.pem = violation
+
+Evidence in REPORT:
+- git_diff_files (run: git diff --name-only main...HEAD)
+- verify.output (last 20 lines)
+
+Batch mode: 2-5 LOW-risk tasks, independent, no conflicts
+
+Phases: IDLE → PLAN → DISPATCH → BUILD → VERIFY → [REVIEW] → MERGE
+Terminal: HALT (after 3 failures)

@@ -1,21 +1,30 @@
 {
-  "v": 3,
+  "v": 5,
   "id": null,
   "milestone": null,
   "goal": null,
-  "subtasks": [],
+  
   "context": {
     "why": null,
     "deps": [],
-    "extract": null
+    "extract": null,
+    "skills": []
   },
+
+  "phases": [],
+
+  "implementation": {},
+
   "scope": {
     "write": [],
     "create_under": [],
+    "delete": [],
     "read_forbidden": [".env*", "*.pem", "*.key", "*.secret"],
-    "forbidden": ["package.json", "*.lock", "*.config.*", "pilot/*"]
+    "forbidden": ["package.json", "*.lock", "pilot/*"]
   },
+
   "acceptance": [],
   "verify": [],
-  "risk": "LOW"
+  "risk": "LOW",
+  "notes": []
 }

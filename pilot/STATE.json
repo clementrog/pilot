@@ -1,11 +1,13 @@
 {
-  "v": 2,
+  "v": 3,
   "phase": "IDLE",
+  "mode": null,
   "task": null,
   "milestone": null,
   "branch": "main",
+  "batch_tasks": [],
   "attempt": 0,
   "blockers": [],
-  "next": "Read /prd/ to begin planning",
+  "next": null,
   "ts": null
 }

@@ -5,7 +5,11 @@
   "request": {
     "type": null,
     "focus": [],
-    "questions": []
+    "questions": [
+      "What edge cases are missing?",
+      "What are the security/performance risks?",
+      "What would you block this PR for?"
+    ]
   },
   "response": {
     "reviewer": null,
