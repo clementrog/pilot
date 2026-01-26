@@ -1,0 +1,40 @@
+{
+  "name": "create-pilot",
+  "version": "3.1.0",
+  "description": "Scaffold Pilot protocol for AI coding agents",
+  "type": "module",
+  "bin": {
+    "create-pilot": "./bin/create-pilot.js"
+  },
+  "files": [
+    "bin",
+    "pilot",
+    "prd",
+    "ORCHESTRATOR.md",
+    "BOOT.txt",
+    "cursorrules",
+    "claude-md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clementrog/pilot.git"
+  },
+  "keywords": [
+    "ai",
+    "llm",
+    "coding",
+    "orchestration",
+    "cursor",
+    "claude",
+    "scaffold"
+  ],
+  "author": "Clément Rog",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clementrog/pilot/issues"
+  },
+  "homepage": "https://github.com/clementrog/pilot#readme",
+  "engines": {
+    "node": ">=18"
+  }
+}

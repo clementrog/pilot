@@ -1,155 +1,88 @@
-# PILOT v3.1.0
+# Pilot
 
-AI orchestration protocol for LLM coding agents.
-
-## Problem
-
-AI agents lose context, edit wrong files, skip verification. The issue isn't capability — it's state management.
-
-## Solution
-
-JSON contracts + role separation + git as truth.
+Pilot is an orchestration protocol that helps AI coding agents stay on track. It uses JSON contracts, role separation, and git verification to prevent the usual failure modes: lost context, scope creep, wrong file edits, skipped tests.
 
 ```
 Human → Orchestrator (plans) → Builder (executes) → Orchestrator (verifies) → Merge
 ```
 
-## Quick Start
+## Get started
 
 ```bash
-# Copy to your project
-cp -r pilot-shell/pilot ./pilot
-cp pilot-shell/ORCHESTRATOR.md ./
-cp pilot-shell/BOOT.txt ./
-
-# Cursor
-cp pilot-shell/.cursorrules ./
-
-# Claude Code
-cp pilot-shell/claude.md.template ./claude.md
+npx create-pilot
 ```
 
-## Structure
+Or with a PRD:
+
+```bash
+npx create-pilot ./spec.md
+```
+
+Then open your LLM (Claude Code, Cursor, etc.) and say: **"Read BOOT.txt"**
+
+## What it creates
 
 ```
-/
-├── ORCHESTRATOR.md          # Planning/verify instructions
+your-project/
+├── pilot/
+│   ├── STATE.json           # Current phase, branch, attempts
+│   ├── TASK.json            # Work contract for builder
+│   ├── REPORT.json          # Completion claim + evidence
+│   ├── ROADMAP.json         # Milestone planning
+│   ├── REVIEW.json          # Code review
+│   └── DESIGN-CONTRACT.json # UI specs
+├── prd/
+├── ORCHESTRATOR.md          # Planning instructions
 ├── BOOT.txt                 # Quick reference
-├── .cursorrules             # Builder (Cursor)
-├── claude.md                # Builder (Claude Code)
-│
-└── pilot/
-    ├── STATE.json           # Phase, branch, attempts
-    ├── TASK.json            # Work contract
-    ├── REPORT.json          # Completion + evidence
-    ├── ROADMAP.json         # [optional] Milestones
-    ├── REVIEW.json          # [optional] Code review
-    ├── DESIGN-CONTRACT.json # [optional] UI specs
-    └── skills/              # [optional] Knowledge modules
+├── .cursorrules             # Builder instructions (Cursor)
+└── claude.md                # Builder instructions (Claude Code)
 ```
 
-## Core vs Optional
+## How it works
 
-**Core (always):**
-- STATE + TASK + REPORT
-- Scope enforcement
-- Git diff on every verify
-- 3-attempt limit
+**Two roles, strict boundaries:**
 
-**Optional (add when needed):**
-- ROADMAP — multi-milestone planning
-- DESIGN-CONTRACT — UI/design specs
-- REVIEW — HIGH risk escalation
-- Skills — domain knowledge
-
-Start with core. Add modules as complexity grows.
-
-## Contract Ownership
-
-| Role | Writes | Never Touches |
+| Role | Writes | Never touches |
 |------|--------|---------------|
 | Orchestrator | `/pilot/*` (except REPORT) | Code files |
 | Builder | Code (in scope) + REPORT | Other `/pilot/*` |
 
-Reading `.env`/`.key`/`.pem` = protocol violation.
+**Git as truth:** Every verify runs `git diff --name-only` to check scope. Claims in REPORT.json are verified against actual changes.
 
-## Evidence
-
-Builder must include in REPORT:
-- `git_diff_files` — output of `git diff --name-only main...HEAD`
-- `verify.output` — last 20 lines of verify command
-
-Orchestrator verifies claims against git. Git is truth.
-
-## Batch Mode
-
-Bundle 2-5 LOW-risk tasks into one cycle:
-
-```
-Single:  branch → build → verify → merge  ×3
-Batch:   branch → build [all] → verify → merge
-```
-
-Conditions:
-- 2-5 tasks, all LOW risk
-- Each independently shippable
-- No overlapping write scopes
-- < 3 hours combined
-
-## Risk Levels
-
-| Risk | Behavior |
-|------|----------|
-| LOW | Batchable, light verify |
-| MED | Acceptance criteria required |
-| HIGH | Review before merge |
-
-## Safety
-
-1. Contract ownership — roles only write designated files
-2. Forbidden reads — opening secrets = violation
-3. Git diff every verify — all risk levels
-4. Preflight branch check — before verify
-5. Evidence required — git diff + verify output
-6. 3 attempts max — then HALT
+**3-attempt limit:** After 3 failed verifications, the system halts for human intervention.
 
 ## Workflow
 
 ```
-IDLE → PLAN → DISPATCH → BUILD → VERIFY → MERGE → IDLE
+IDLE → PLAN → DISPATCH → BUILD → VERIFY → MERGE
                               ↓
-                           [REVIEW] (HIGH)
+                           [REVIEW] (HIGH risk)
                               ↓
                             HALT (3 failures)
 ```
 
-## Attempt Rules
+## Risk levels
 
-Orchestrator increments `attempt` only when rejecting REPORT:
-- Scope violation
-- Verify failed
-- Forbidden read detected
+| Risk | Behavior |
+|------|----------|
+| LOW | Batchable (2-5 tasks), light verify |
+| MED | Acceptance criteria required |
+| HIGH | Code review before merge |
 
-Builder never touches `attempt`.
+## CLI options
 
-## Changelog
+```bash
+npx create-pilot              # scaffold only
+npx create-pilot ./prd.md     # scaffold + copy PRD to prd/input.md
+npx create-pilot -            # read PRD from stdin
+npx create-pilot --force      # overwrite existing pilot/
+```
 
-### v3.1.0
-- Contract ownership enforced (violations = attempt increment)
-- Forbidden reads are hard violations
-- Batch minimum lowered to 2 tasks
-- Git diff required on all verifies (not just HIGH)
-- Evidence required in REPORT (`git_diff_files`, `verify.output`)
-- Explicit attempt increment rules
-- Preflight branch check before verify
-- Core vs Optional structure clarified
-- Renamed "Claude mode" to "Orchestrator/Builder mode"
+## Documentation
 
-### v3.0.0
-- Initial v3 release
-- Batch mode
-- Skills system
-- Design contract
+- `BOOT.txt` — Quick reference for starting sessions
+- `ORCHESTRATOR.md` — Full protocol for the planning role
+- `.cursorrules` / `claude.md` — Instructions for the builder role
 
 ## License
 
