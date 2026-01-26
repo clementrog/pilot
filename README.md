@@ -1,7 +1,6 @@
 # Pilot
 
 [![npm](https://img.shields.io/npm/v/create-pilot?style=flat-square&color=cb3837)](https://www.npmjs.com/package/create-pilot)
-[![downloads](https://img.shields.io/npm/dm/create-pilot?style=flat-square&color=cb3837)](https://www.npmjs.com/package/create-pilot)
 [![GitHub stars](https://img.shields.io/github/stars/clementrog/pilot?style=flat-square)](https://github.com/clementrog/pilot)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
@@ -9,7 +8,9 @@
 
 Pilot is a lightweight protocol that keeps AI agents focused. It works by creating a shared "contract" between you and the AI — a simple folder of JSON files that tracks what needs to be done, what's been completed, and what to verify.
 
-![Pilot Workflow](workflow.svg)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/clementrog/pilot/main/workflow.svg" alt="Pilot Workflow" width="100%">
+</p>
 
 ## Quick start
 
