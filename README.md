@@ -1,88 +1,105 @@
 # Pilot
 
-Pilot is an orchestration protocol that helps AI coding agents stay on track. It uses JSON contracts, role separation, and git verification to prevent the usual failure modes: lost context, scope creep, wrong file edits, skipped tests.
+[![npm](https://img.shields.io/npm/v/create-pilot?style=flat-square&color=cb3837)](https://www.npmjs.com/package/create-pilot)
+[![downloads](https://img.shields.io/npm/dm/create-pilot?style=flat-square&color=cb3837)](https://www.npmjs.com/package/create-pilot)
+[![GitHub stars](https://img.shields.io/github/stars/clementrog/pilot?style=flat-square)](https://github.com/clementrog/pilot)
+[![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
-```
-Human → Orchestrator (plans) → Builder (executes) → Orchestrator (verifies) → Merge
-```
+**AI coding agents are powerful but unreliable.** They lose track of what they're doing, edit the wrong files, skip verification, and go off-scope. Pilot fixes this.
 
-## Get started
+Pilot is a lightweight protocol that keeps AI agents focused. It works by creating a shared "contract" between you and the AI — a simple folder of JSON files that tracks what needs to be done, what's been completed, and what to verify.
+
+![Pilot Workflow](workflow.svg)
+
+## Quick start
 
 ```bash
 npx create-pilot
 ```
 
-Or with a PRD:
+Then open your AI coding tool (Claude Code, Cursor, Windsurf, etc.) and say:
 
-```bash
-npx create-pilot ./spec.md
-```
+> **"Read BOOT.txt"**
 
-Then open your LLM (Claude Code, Cursor, etc.) and say: **"Read BOOT.txt"**
+That's it. The AI will pick up the protocol and follow it.
 
-## What it creates
+## What problem does this solve?
 
-```
-your-project/
-├── pilot/
-│   ├── STATE.json           # Current phase, branch, attempts
-│   ├── TASK.json            # Work contract for builder
-│   ├── REPORT.json          # Completion claim + evidence
-│   ├── ROADMAP.json         # Milestone planning
-│   ├── REVIEW.json          # Code review
-│   └── DESIGN-CONTRACT.json # UI specs
-├── prd/
-├── ORCHESTRATOR.md          # Planning instructions
-├── BOOT.txt                 # Quick reference
-├── .cursorrules             # Builder instructions (Cursor)
-└── claude.md                # Builder instructions (Claude Code)
-```
+When you ask an AI to build something complex, things go wrong:
+
+| Problem | How Pilot fixes it |
+|---------|-------------------|
+| AI forgets what it was doing | State is tracked in `STATE.json` |
+| AI edits files it shouldn't | Scope is defined upfront, verified with git |
+| AI skips testing | Verification commands are mandatory |
+| AI goes in circles | 3-attempt limit, then stops for human help |
+| No clear handoff | Structured task contracts between plan and build |
 
 ## How it works
 
-**Two roles, strict boundaries:**
+Pilot splits work into two roles:
 
-| Role | Writes | Never touches |
-|------|--------|---------------|
-| Orchestrator | `/pilot/*` (except REPORT) | Code files |
-| Builder | Code (in scope) + REPORT | Other `/pilot/*` |
+- **Orchestrator** — Plans tasks, defines scope, verifies completion
+- **Builder** — Writes code, reports what was done
 
-**Git as truth:** Every verify runs `git diff --name-only` to check scope. Claims in REPORT.json are verified against actual changes.
+They communicate through JSON files in a `/pilot` folder:
 
-**3-attempt limit:** After 3 failed verifications, the system halts for human intervention.
+```
+pilot/
+├── STATE.json    # Where are we? (phase, attempts, blockers)
+├── TASK.json     # What needs to be done? (scope, acceptance criteria)
+├── REPORT.json   # What was done? (files changed, test output)
+└── ...
+```
+
+The key insight: **git is the source of truth**. The orchestrator verifies claims by running `git diff` — not by trusting what the builder says.
+
+## What gets created
+
+Running `npx create-pilot` adds these files to your project:
+
+```
+your-project/
+├── pilot/                   # Contract files (JSON)
+├── prd/                     # Place your specs here
+├── ORCHESTRATOR.md          # Instructions for planning
+├── BOOT.txt                 # Quick-start reference
+├── .cursorrules             # Builder instructions (Cursor)
+└── claude.md                # Builder instructions (Claude Code)
+```
 
 ## Workflow
 
 ```
 IDLE → PLAN → DISPATCH → BUILD → VERIFY → MERGE
-                              ↓
-                           [REVIEW] (HIGH risk)
-                              ↓
-                            HALT (3 failures)
+                                    ↓
+                              [fails 3x]
+                                    ↓
+                                  HALT
 ```
 
-## Risk levels
+1. **PLAN** — Break work into tasks, assess risk
+2. **DISPATCH** — Create branch, write task contract
+3. **BUILD** — AI writes code within defined scope
+4. **VERIFY** — Check git diff, run tests, validate scope
+5. **MERGE** — Squash merge to main, clean up
 
-| Risk | Behavior |
-|------|----------|
-| LOW | Batchable (2-5 tasks), light verify |
-| MED | Acceptance criteria required |
-| HIGH | Code review before merge |
+If verification fails 3 times, the system halts and waits for you.
 
 ## CLI options
 
 ```bash
-npx create-pilot              # scaffold only
-npx create-pilot ./prd.md     # scaffold + copy PRD to prd/input.md
-npx create-pilot -            # read PRD from stdin
-npx create-pilot --force      # overwrite existing pilot/
+npx create-pilot              # Scaffold into current directory
+npx create-pilot ./spec.md    # Also copy your PRD
+npx create-pilot --force      # Overwrite existing pilot/
 ```
 
-## Documentation
+## Works with
 
-- `BOOT.txt` — Quick reference for starting sessions
-- `ORCHESTRATOR.md` — Full protocol for the planning role
-- `.cursorrules` / `claude.md` — Instructions for the builder role
+- Claude Code
+- Cursor
+- Windsurf
+- Any LLM that can read files
 
 ## License
 
