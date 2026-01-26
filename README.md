@@ -8,9 +8,7 @@
 
 Pilot is a lightweight protocol that keeps AI agents focused. It works by creating a shared "contract" between you and the AI — a simple folder of JSON files that tracks what needs to be done, what's been completed, and what to verify.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/clementrog/pilot/main/workflow.svg" alt="Pilot Workflow" width="100%">
-</p>
+![Pilot Workflow](./workflow.svg)
 
 ## Quick start
 
