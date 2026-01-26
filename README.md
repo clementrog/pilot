@@ -4,11 +4,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/clementrog/pilot?style=flat-square)](https://github.com/clementrog/pilot)
 [![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
-**AI coding agents made us faster. They also made us sloppy.**
-
-Context in, output out, trust the confident answer. We became copy-paste operators — not thinkers. Every hour went to managing the machine, not directing it.
-
-Pilot is a `/pilot` folder you drop into any repo. It gives AI tools persistent memory, scoped tasks, and evidence-based verification. Multiple roles (planner, builder, reviewer) catch each other's mistakes before they compound.
+A `/pilot` folder you drop into any repo. JSON contracts that give AI agents persistent memory, scoped tasks, and verified commits.
 
 ```
 Human → Plan → Dispatch → Build → Verify → Merge
@@ -24,84 +20,90 @@ npx create-pilot
 
 Then open your AI tool (Claude Code, Cursor, Windsurf) and say: **"Read BOOT.txt"**
 
-## Why this exists
+## What it does
 
-### For developers
+- **Persistent state** — AI remembers where you left off. No re-explaining your project every session.
+- **Scoped tasks** — Task says "only touch these 4 files"? Touching a 5th triggers a stop.
+- **Evidence-based verification** — Git diff + terminal output as proof. Not "trust me."
+- **Role separation** — Planner, builder, reviewer catch each other's mistakes before they compound.
+- **Secret protection** — Reading `.env`, `.key`, `.pem` = immediate violation.
 
-You're burning expensive tokens on the wrong tasks. Using Opus to write CRUD is like hiring a Michelin chef to peel potatoes.
+## Why use this
 
-Pilot lets you route work: heavy models think (plan, review), light models type (implement). One clear scope per task. Git diff verifies every claim. No more 47-file diffs from a "quick fix."
+### If you're a developer
 
-### For non-technical builders
+The bottleneck isn't "not enough tokens." It's vague tasks turning into 47-file diffs and hours of debug.
 
-AI gave you the ability to build real software — not just spec it, write about it. Actually build it.
+Pilot enforces structure:
+- **Token efficiency** — Route planning to expensive models, implementation to fast/cheap ones
+- **Scope control** — Git diff required on every verify, not just high-risk tasks
+- **Batch mode** — Group 2-5 low-risk tasks into one cycle
+- **3-attempt limit** — Fails three times? Halts for human review instead of looping forever
 
-But the current workflow leaves no room for taste. You're debugging hallucinations instead of shaping how something should feel.
+### If you're a non-technical builder
 
-Pilot automates the tedious parts — verification, scope control, catching drift. So you can focus on direction and craft. Code isn't scarce anymore. Taste is.
+AI let you build real software. But the current workflow is: context in, output out, trust the confident answer, debug for hours.
 
-## What it optimizes for
-
-| | |
-|---|---|
-| **Quality** | Hallucinations die in layers, not in production |
-| **Cost** | Heavy models think, light models type |
-| **Overhead** | No more re-explaining your project every session |
-| **Trust** | You verify evidence, not code |
+Pilot automates the verification so you can focus on direction:
+- **Reliability by default** — Errors caught in layers, not in production
+- **Clear boundaries** — You define what AI can and can't touch
+- **Evidence you can check** — Verify terminal output, not code
 
 ## How it works
 
-Pilot splits work into two roles with strict boundaries:
+Two roles, strict boundaries:
 
-- **Orchestrator** — Plans tasks, defines scope, verifies completion
-- **Builder** — Writes code within scope, reports what was done
+| Role | Writes | Cannot touch |
+|------|--------|--------------|
+| **Orchestrator** | `STATE`, `TASK`, `ROADMAP`, `REVIEW` | Code files |
+| **Builder** | Code (in scope) + `REPORT` | Other `/pilot/*` files |
 
-They communicate through JSON contracts:
+They communicate through JSON:
 
 ```
 pilot/
-├── STATE.json    # Where are we? (phase, attempts, blockers)
-├── TASK.json     # What to build (scope, acceptance criteria)
-├── REPORT.json   # What was done (files changed, test output)
+├── STATE.json    # Current phase, branch, attempts
+├── TASK.json     # Scope, acceptance criteria, verify commands
+├── REPORT.json   # Files changed, terminal output, blockers
 └── ...
 ```
 
-The key rule: **git is the source of truth**. If a task says "only touch these four files," touching a fifth triggers a stop. Real terminal output as proof, not just "trust me."
+Git is the source of truth. Claims in `REPORT.json` are verified against actual `git diff`.
 
 ## What gets created
 
 ```
 your-project/
-├── pilot/                   # Contract files (JSON)
-├── prd/                     # Place your specs here
-├── ORCHESTRATOR.md          # Instructions for planning
-├── BOOT.txt                 # Quick-start reference
+├── pilot/                   # JSON contracts
+├── prd/                     # Your specs go here
+├── ORCHESTRATOR.md          # Planner instructions
+├── BOOT.txt                 # Quick reference
 ├── .cursorrules             # Builder instructions (Cursor)
 └── claude.md                # Builder instructions (Claude Code)
 ```
 
 ## Workflow
 
-1. **PLAN** — Break work into tasks, assess risk
-2. **DISPATCH** — Create branch, write task contract
-3. **BUILD** — AI writes code within defined scope
-4. **VERIFY** — Check git diff, run tests, validate evidence
-5. **MERGE** — Squash merge to main, clean up
+1. **PLAN** — Decompose work, assess risk level
+2. **DISPATCH** — Create branch, write task contract with scope
+3. **BUILD** — AI implements within defined boundaries
+4. **VERIFY** — Git diff, run tests, check evidence
+5. **MERGE** — Squash to main, clean up
 
-If verification fails 3 times, the system halts and waits for you.
+Fails 3 times → **HALT**. Waits for you.
 
-## CLI options
+## CLI
 
 ```bash
 npx create-pilot              # Scaffold into current directory
-npx create-pilot ./spec.md    # Also copy your PRD
-npx create-pilot --force      # Overwrite existing pilot/
+npx create-pilot ./spec.md    # Include your PRD
+npx create-pilot --force      # Overwrite existing
 ```
 
 ## Works with
 
-Claude Code · Cursor · Windsurf · Any LLM that can read files
+Claude Code · Cursor · Windsurf · Any LLM that reads files
 
 ## License
 
-MIT — Free. Open source. Built for how AI coding works today.
+MIT
