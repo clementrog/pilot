@@ -8,7 +8,11 @@
 
 Pilot is a lightweight protocol that keeps AI agents focused. It works by creating a shared "contract" between you and the AI — a simple folder of JSON files that tracks what needs to be done, what's been completed, and what to verify.
 
-![Pilot Workflow](./workflow.svg)
+```
+Human → Plan → Dispatch → Build → Verify → Merge
+         ↑                           ↓
+         └─────── [retry x3] ────────┘
+```
 
 ## Quick start
 
@@ -68,14 +72,6 @@ your-project/
 ```
 
 ## Workflow
-
-```
-IDLE → PLAN → DISPATCH → BUILD → VERIFY → MERGE
-                                    ↓
-                              [fails 3x]
-                                    ↓
-                                  HALT
-```
 
 1. **PLAN** — Break work into tasks, assess risk
 2. **DISPATCH** — Create branch, write task contract
