@@ -1,6 +1,6 @@
 {
   "name": "pilot-engine",
-  "version": "1.3.1-delta.1",
+  "version": "1.3.1-delta.2",
   "description": "Pilot: autonomous build loop engine (runner + CLI + templates)",
   "type": "module",
   "bin": {
