@@ -1,0 +1,12 @@
+{
+  "id": "smoke-task-001",
+  "status": "in_progress",
+  "title": "Create SMOKE.txt",
+  "description": "Create a file SMOKE.txt with content OK",
+  "scope": {
+    "allowed": [
+      "."
+    ],
+    "forbidden": []
+  }
+}

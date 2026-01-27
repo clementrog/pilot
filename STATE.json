@@ -1,0 +1,48 @@
+{
+  "project": "pilot-shell",
+  "status": "active",
+  "current_task": "smoke-task-001",
+  "retry_count": 0,
+  "last_completed_task": null,
+  "task_started_at": null,
+  "flags": {
+    "allowLargeDiffOnce": false
+  },
+  "config": {
+    "orchestratorModel": "",
+    "builderTimeout": 300000,
+    "orchestratorTimeout": 120000,
+    "verifyTimeout": 60000,
+    "watchdogTimeout": 600000,
+    "verifyCommands": [],
+    "tools": {
+      "builder": "cursor",
+      "cursor": {
+        "mode": "prompt-file"
+      },
+      "opencode": {
+        "mode": "file-attachment",
+        "format": "default"
+      }
+    },
+    "capabilities": {
+      "promptTransport": "prompt-file"
+    },
+    "safety": {
+      "largeDiff": {
+        "maxFiles": 8,
+        "maxLines": 300
+      },
+      "cleanUntrackedOnRollback": true,
+      "allowDirtyWorkspace": true
+    }
+  },
+  "git": {
+    "lkg": null
+  },
+  "run": {
+    "id": "run-20260127-203248-nx84gc",
+    "started_at": 1769542368712,
+    "history_dir": "history/20260127-203248-run-20260127-203248-nx84gc"
+  }
+}
