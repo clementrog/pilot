@@ -22,3 +22,7 @@ build/
 # Local smoke sandboxes
 sandbox/
 
+
+# local build artifacts
+.tmp/
+pilot-engine-*.tgz
