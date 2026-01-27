@@ -8,8 +8,7 @@
   },
   "files": [
     "dist/",
-    "templates/",
-    "templates/.gitignore"
+    "templates/"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",

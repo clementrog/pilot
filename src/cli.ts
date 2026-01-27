@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as fs from 'fs'
 import * as path from 'path'
 import * as crypto from 'crypto'
@@ -83,8 +85,18 @@ function sha256(p: string): string {
 }
 
 function workspaceDirFromArgs(args: string[]): string {
-  const ws = getArg(args, '--workspace') || process.env.PILOT_WORKSPACE || 'pilot'
-  return path.resolve(process.cwd(), ws)
+  const explicit = getArg(args, '--workspace') || process.env.PILOT_WORKSPACE
+  if (explicit) return path.resolve(process.cwd(), explicit)
+
+  // Auto-discover: prefer .pilot if it exists, else pilot
+  const cwd = process.cwd()
+  const dotPilot = path.join(cwd, '.pilot', 'STATE.json')
+  if (fs.existsSync(dotPilot)) return path.join(cwd, '.pilot')
+
+  const pilot = path.join(cwd, 'pilot', 'STATE.json')
+  if (fs.existsSync(pilot)) return path.join(cwd, 'pilot')
+
+  return path.join(cwd, 'pilot')
 }
 
 function writeBlocked(workspaceDir: string, reason: string, action: string) {
@@ -141,7 +153,8 @@ function migrateStateToSchema2(state: any): State {
 
 function copyManagedFile(templateRel: string, workspaceDir: string, backupDir: string, current: Manifest | null, expected: Manifest): { conflict: boolean } {
   const src = path.join(TEMPLATES_DIR, templateRel)
-  const dest = path.join(workspaceDir, templateRel)
+  const destRel = templateRel === 'gitignore' ? '.gitignore' : templateRel
+  const dest = path.join(workspaceDir, destRel)
   ensureDir(path.dirname(dest))
 
   if (fs.existsSync(dest)) {
@@ -180,7 +193,8 @@ function initWorkspace(workspaceDir: string) {
 
   // Managed runtime files
   for (const rel of expected.managedFiles) {
-    const dest = path.join(workspaceDir, rel)
+    const destRel = rel === 'gitignore' ? '.gitignore' : rel
+    const dest = path.join(workspaceDir, destRel)
     if (!fs.existsSync(dest)) {
       const src = path.join(TEMPLATES_DIR, rel)
       ensureDir(path.dirname(dest))
@@ -366,6 +380,11 @@ async function main() {
 
   if (cmd === 'run') {
     const once = hasArg(args, '--once')
+
+    // Always gate run behind doctor. Blocked -> exit 2 (or specific doctor code).
+    const code = doctor(workspaceDir)
+    if (code !== 0) process.exit(code)
+
     await runPilot({ workspaceDir, runOnce: once })
     return
   }
