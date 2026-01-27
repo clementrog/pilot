@@ -18,3 +18,7 @@ node_modules/
 .next/
 dist/
 build/
+
+# Local smoke sandboxes
+sandbox/
+
