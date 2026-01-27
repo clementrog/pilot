@@ -1,0 +1,11 @@
+# Runner-owned artifacts (safe to ignore)
+CONTEXT.json
+RECENT.json
+run.log*
+history/
+.tmp/
+.backup/
+
+# Runtime state (these are created by the loop)
+REPORT.json
+BLOCKED.json

@@ -1,109 +1,48 @@
-# Pilot
+# Pilot Engine
 
-[![npm](https://img.shields.io/npm/v/create-pilot?style=flat-square&color=cb3837)](https://www.npmjs.com/package/create-pilot)
-[![GitHub stars](https://img.shields.io/github/stars/clementrog/pilot?style=flat-square)](https://github.com/clementrog/pilot)
-[![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+Pilot is an autonomous build loop engine.
 
-A `/pilot` folder you drop into any repo. JSON contracts that give AI agents persistent memory, scoped tasks, and verified commits.
+Engine lives in the npm package (runner + CLI + templates). Each repo keeps a small `pilot/` runtime workspace (mostly user data).
 
+## Nested workspace (recommended)
+
+For a cleaner repo root, use `--workspace .pilot`:
+
+```bash
+pnpm exec pilot init --workspace .pilot
+pnpm exec pilot run --workspace .pilot
 ```
-Human → Plan → Dispatch → Build → Verify → Merge
-         ↑                           ↓
-         └─────── [retry x3] ────────┘
-```
+
+This works inside existing git repos; all operational files (STATE, TASK, history, etc.) live under `.pilot/`.
 
 ## Quick start
 
 ```bash
-npx create-pilot
+pnpm add -D pilot-engine
+
+# Create ./pilot workspace
+pnpm exec pilot init
+
+# Optional: sanity check
+pnpm exec pilot doctor
+
+# Run the loop
+pnpm exec pilot run
+
+# Or run one cycle
+pnpm exec pilot run --once
+
+# Upgrade managed runtime files + migrate STATE schema
+pnpm exec pilot upgrade
 ```
 
-Then open your AI tool (Claude Code, Cursor, Windsurf) and say: **"Read BOOT.txt"**
+## Workspace ownership
 
-## What it does
+Never overwritten by upgrades:
+- `pilot/ROADMAP.json`
+- `pilot/TASK.json`
+- `pilot/REPORT.json`
+- `pilot/BLOCKED.json`
 
-- **Persistent state** — AI remembers where you left off. No re-explaining your project every session.
-- **Scoped tasks** — Task says "only touch these 4 files"? Touching a 5th triggers a stop.
-- **Evidence-based verification** — Git diff + terminal output as proof. Not "trust me."
-- **Role separation** — Planner, builder, reviewer catch each other's mistakes before they compound.
-- **Secret protection** — Reading `.env`, `.key`, `.pem` = immediate violation.
-
-## Why use this
-
-### If you're a developer
-
-The bottleneck isn't "not enough tokens." It's vague tasks turning into 47-file diffs and hours of debug.
-
-Pilot enforces structure:
-- **Token efficiency** — Route planning to expensive models, implementation to fast/cheap ones
-- **Scope control** — Git diff required on every verify, not just high-risk tasks
-- **Batch mode** — Group 2-5 low-risk tasks into one cycle
-- **3-attempt limit** — Fails three times? Halts for human review instead of looping forever
-
-### If you're a non-technical builder
-
-AI let you build real software. But the current workflow is: context in, output out, trust the confident answer, debug for hours.
-
-Pilot automates the verification so you can focus on direction:
-- **Reliability by default** — Errors caught in layers, not in production
-- **Clear boundaries** — You define what AI can and can't touch
-- **Evidence you can check** — Verify terminal output, not code
-
-## How it works
-
-Two roles, strict boundaries:
-
-| Role | Writes | Cannot touch |
-|------|--------|--------------|
-| **Orchestrator** | `STATE`, `TASK`, `ROADMAP`, `REVIEW` | Code files |
-| **Builder** | Code (in scope) + `REPORT` | Other `/pilot/*` files |
-
-They communicate through JSON:
-
-```
-pilot/
-├── STATE.json    # Current phase, branch, attempts
-├── TASK.json     # Scope, acceptance criteria, verify commands
-├── REPORT.json   # Files changed, terminal output, blockers
-└── ...
-```
-
-Git is the source of truth. Claims in `REPORT.json` are verified against actual `git diff`.
-
-## What gets created
-
-```
-your-project/
-├── pilot/                   # JSON contracts
-├── prd/                     # Your specs go here
-├── ORCHESTRATOR.md          # Planner instructions
-├── BOOT.txt                 # Quick reference
-├── .cursorrules             # Builder instructions (Cursor)
-└── claude.md                # Builder instructions (Claude Code)
-```
-
-## Workflow
-
-1. **PLAN** — Decompose work, assess risk level
-2. **DISPATCH** — Create branch, write task contract with scope
-3. **BUILD** — AI implements within defined boundaries
-4. **VERIFY** — Git diff, run tests, check evidence
-5. **MERGE** — Squash to main, clean up
-
-Fails 3 times → **HALT**. Waits for you.
-
-## CLI
-
-```bash
-npx create-pilot              # Scaffold into current directory
-npx create-pilot ./spec.md    # Include your PRD
-npx create-pilot --force      # Overwrite existing
-```
-
-## Works with
-
-Claude Code · Cursor · Windsurf · Any LLM that reads files
-
-## License
-
-MIT
+Runner-owned (safe to ignore):
+- `pilot/CONTEXT.json`, `pilot/RECENT.json`, `pilot/run.log*`, `pilot/history/`, `pilot/.tmp/`, `pilot/.backup/`
