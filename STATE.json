@@ -1,9 +1,9 @@
 {
   "project": "pilot-shell",
-  "status": "active",
+  "status": "complete",
   "current_task": "smoke-task-001",
   "retry_count": 0,
-  "last_completed_task": null,
+  "last_completed_task": "smoke-task-001",
   "task_started_at": null,
   "flags": {
     "allowLargeDiffOnce": false
@@ -38,7 +38,7 @@
     }
   },
   "git": {
-    "lkg": null
+    "lkg": "b6bdae33e6a0ea6e67e03514756312e17a1877c0"
   },
   "run": {
     "id": "run-20260127-203248-nx84gc",
